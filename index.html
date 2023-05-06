@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    .title {
+      font-weight: bold;
+      font-size: 24px;
+      text-align: center;
+    }
+    table {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    td {
+      width: 150px;
+      text-align: center;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    p {
+      display: none;
+    }
+    .active {
+      display: block;
+    }
+  </style>
+
+  <body>
+    <h1>Office Supplies</h1>
+    <br />
+    <table>
+      <tr>
+        <td>
+          <img
+            id="img1"
+            onclick="changePen()"
+            width="100"
+            height="100"
+            src="pen1.jpg"
+          />
+        </td>
+        <td class="title">Pen</td>
+        <td>
+          <select id="penSelect">
+            <option value="0"></option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </td>
+        <td id="pen_price">$15</td>
+      </tr>
+      <tr>
+        <td>
+          <img
+            id="img2"
+            onclick="changeNotebook()"
+            width="100"
+            height="100"
+            src="notebook1.jpg"
+          />
+        </td>
+        <td class="title">Notebook</td>
+        <td>
+          <select id="noteSelect">
+            <option value="0"></option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </td>
+        <td id="note_price">$25</td>
+      </tr>
+      <tr>
+        <td>
+          <img
+            id="img3"
+            onclick="changeCalculator()"
+            width="100"
+            height="100"
+            src="calculator1.jpg"
+          />
+        </td>
+        <td class="title">Calculator</td>
+        <td>
+          <select id="calcSelect">
+            <option value="0"></option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </td>
+        <td id="calc_price">$130</td>
+      </tr>
+      <tr>
+        <td>
+          <img
+            id="img4"
+            onclick="changeClips()"
+            width="100"
+            height="100"
+            src="clips1.jpg"
+          />
+        </td>
+        <td class="title">Clips</td>
+        <td>
+          <select id="clipsSelect">
+            <option value="0"></option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3" class="active">3</option>
+          </select>
+        </td>
+        <td id="clips_price">$10</td>
+      </tr>
+    </table>
+    <br/>
+    <center><button onclick="addToCart()">Add to Cart</button></center>
+    <br />
+    <hr />
+    <div id="invoice" style="text-align: center">
+      <p id="pen_string">
+        Pen X <span id="pen_several">1</span> = $<span id="pen_totalPrice"></span>
+      </p>
+      <p id="notebook_string">
+        Notebook X <span id="note_several">1</span> = $<span
+          id="note_totalPrice"
+        ></span>
+      </p>
+      <p id="calculator_string">
+        Calculator X <span id="calculator_several">1</span> = $<span
+          id="calc_totalPrice"
+        ></span>
+      </p>
+      <p id="clips_string">
+        Clips x <span id="clips_several">1</span> = $<span
+          id="clips_totalPrice"
+        ></span>
+      </p>
+      <p class="active">Total: $<span id="total_price">0</span></p>
+    </div>
+  </body>
+
+  <script>
+    var penpics = [
+     'pen1.jpg', 
+     'pen2.jpg', 
+     'pen3.jpg'
+    ]
+
+    var notepics = [
+      'notebook1.jpg', 
+      'notebook2.jpg'
+    ]
+
+    var calcpics = [
+      'calculator1.jpg',
+      'calculator2.jpg',
+      'calculator3.jpg',
+      'calculator4.jpg'
+    ]
+    var clippics = [
+      'clips1.jpg',
+      'clips2.jpg',
+      'clips3.jpg',
+      'clips4.jpg',
+      'clips5.jpg'
+    ]
+
+    var penprices = [15, 30, 100]
+    var noteprices = [25, 40]
+    var calcprices = [130, 90, 100, 200]
+    var clipprices = [10, 15, 5, 20, 30]
+
+    var pen = document.getElementById('img1')
+    var notebook = document.getElementById('img2')
+    var calculator = document.getElementById('img3')
+    var clips = document.getElementById('img4')
+
+    var pen_several = document.getElementById('pen_several')
+    var note_several = document.getElementById('note_several')
+    var calculator_several = document.getElementById('calculator_several')
+    var clips_several = document.getElementById('clips_several')
+
+    var pen_price = document.getElementById('pen_price')
+    var note_price = document.getElementById('note_price')
+    var calc_price = document.getElementById('calc_price')
+    var clips_price = document.getElementById('clips_price')
+    const addButton = document.getElementsByTagName('button')
+
+    let pen_totalPrice = document.getElementById('pen_totalPrice')
+    let note_totalPrice = document.getElementById('note_totalPrice')
+    let calc_totalPrice = document.getElementById('calc_totalPrice')
+    let clips_totalPrice = document.getElementById('clips_totalPrice')
+
+    let pen_string = document.getElementById('pen_string')
+    let clips_string = document.getElementById('clips_string')
+    let notebook_string = document.getElementById('notebook_string')
+    let calculator_string = document.getElementById('calculator_string')
+
+    let total_price = document.getElementById('total_price')
+
+    let pen_selected
+    let calc_selected
+    let note_selected
+    let clips_selected
+
+    let pen_PricesIdx = 0
+    let note_PricesIdx = 0
+    let calc_PricesIdx = 0
+    let clips_PricesIdx = 0
+
+    if (pen_selected === undefined) {
+      pen_selected = 0
+    }
+    if (note_selected === undefined) {
+      note_selected = 0
+    }
+    if (calc_selected === undefined) {
+      calc_selected = 0
+    }
+    if (clips_selected === undefined) {
+      clips_selected = 0
+    }
+
+    document
+      .getElementById('penSelect')
+      .addEventListener('change', function () {
+        console.log('Pen selected: ', this.value)
+        pen_selected = this.value
+        if (pen_selected != 0) {
+          pen_several.textContent = pen_selected
+          pen_string.classList.add('active')
+        } else if (pen_selected == 0) {
+          pen_string.classList.remove('active')
+        }
+      })
+
+    document
+      .getElementById('noteSelect')
+      .addEventListener('change', function () {
+        console.log('Note selected: ', this.value)
+        note_selected = this.value
+        if (note_selected != 0) {
+          note_several.textContent = note_selected
+          notebook_string.classList.add('active')
+        } else if (note_selected == 0) {
+          notebook_string.classList.remove('active')
+        }
+      })
+
+    document
+      .getElementById('calcSelect')
+      .addEventListener('change', function () {
+        console.log('Calc selected: ', this.value)
+        calc_selected = this.value
+        if (calc_selected != 0) {
+          calculator_several.textContent = calc_selected
+          calculator_string.classList.add('active')
+        } else if (calc_selected == 0) {
+          calculator_string.classList.remove('active')
+        }
+      })
+
+    document
+      .getElementById('clipsSelect')
+      .addEventListener('change', function () {
+        console.log('Clips selected: ', this.value)
+        clips_selected = this.value
+        if (clips_selected != 0) {
+          clips_several.textContent = clips_selected
+          clips_string.classList.add('active')
+        } else if (clips_selected == 0) {
+          clips_string.classList.remove('active')
+        }
+      })
+
+    console.log(pen_selected)
+    console.log(calc_selected)
+    console.log(note_selected)
+    console.log(clips_selected)
+
+    let i = 0
+    let j = 0
+    let k = 0
+    let l = 0
+
+    function changePen() {
+      i++; i %= penpics.length; pen.src = penpics[i];pen_price.innerText = '$' + penprices[i];
+      pen_PricesIdx = i;
+    }
+
+    function changeNotebook() {
+      j++; j %= notepics.length;  notebook.src = notepics[j];note_price.innerText = '$' + noteprices[j];
+      note_PricesIdx = j;
+    }
+
+    function changeCalculator() {
+      k++; k%= calcpics.length; calculator.src = calcpics[k];calc_price.innerText = '$' + calcprices[k];
+      calc_PricesIdx = k;
+    }
+
+    function changeClips() {
+      l++; l%= clippics.length; clips.src = clippics[l]; clips_price.innerText = '$' + clipprices[l];
+      clips_PricesIdx = l;
+    }
+
+    addToCart()
+    function addToCart() {
+      pen_totalPrice.textContent = penprices[pen_PricesIdx] * pen_selected
+      note_totalPrice.textContent = noteprices[note_PricesIdx] * note_selected
+      calc_totalPrice.textContent = calcprices[calc_PricesIdx] * calc_selected
+      clips_totalPrice.textContent = clipprices[clips_PricesIdx] * clips_selected
+      
+      total_price.textContent =
+        penprices[pen_PricesIdx] * pen_selected +
+        noteprices[note_PricesIdx] * note_selected +
+        calcprices[calc_PricesIdx] * calc_selected +
+        clipprices[clips_PricesIdx] * clips_selected
+    }
+  </script>
+</html>
